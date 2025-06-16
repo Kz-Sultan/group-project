@@ -1,0 +1,617 @@
+{% load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premier Dental Care Center - Your Smile, Our Priority</title>
+{%block style %}
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-top {
+            background: #16192b;
+            color: white;
+            padding: 10px 0;
+        }
+        
+        .header-top .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .phone-number {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .main-header {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #27a09a;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            color: #27a09a;
+        }
+        
+        
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://s3-eu-west-1.amazonaws.com/tpd/logos/60590b76abff3c00015654d8/0x0.png');
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero-content p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #27a09a;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #1e8b85;
+        }
+        
+        
+        .services {
+            padding: 80px 0;
+            background: #f8f7f6;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 50px;
+            color: #16192b;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .service-card {
+            background: white;
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: #85c7e6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+            color: white;
+        }
+        
+        .service-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #16192b;
+        }
+        
+        .service-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        
+        .additional-services {
+            padding: 60px 0;
+        }
+        
+        .additional-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .additional-card {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        .additional-card h4 {
+            color: #27a09a;
+            margin-bottom: 10px;
+        }
+        
+        
+        .team {
+            padding: 80px 0;
+            background: #f8f7f6;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .team-member {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        img.my-fit-image {
+            width: 100%;      /* or a specific width, e.g. 300px */
+             height: 300px;    /* set to your intended height */
+             object-fit: cover; /* or 'contain' depending on your needs */
+             display: block;
+             margin: 0 auto;   /* centers the image */}
+        
+        .team-info {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .team-info h4 {
+            color: #16192b;
+            margin-bottom: 5px;
+        }
+        
+        .team-info p {
+            color: #27a09a;
+            font-weight: 500;
+        }
+        
+        .stats {
+            padding: 60px 0;
+            background: #27a09a;
+            color: white;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        
+        .stat-item h3 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-item p {
+            font-size: 18px;
+        }
+        
+        
+        .testimonials {
+            padding: 80px 0;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial {
+            background: #f8f7f6;
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 4px solid #27a09a;
+        }
+        
+        .testimonial blockquote {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .testimonial-author {
+            font-weight: bold;
+            color: #27a09a;
+        }
+        
+        
+        .partners {
+            padding: 60px 0;
+            background: #f8f7f6;
+        }
+        
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .partner-logo {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        
+        .footer {
+            background: #16192b;
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-section h4 {
+            color: #85c7e6;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: #85c7e6;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #ccc;
+        }
+        
+        
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 36px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-header .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+
+{%endblock%}
+
+
+
+</head>
+
+<body>
+    {% block content %}
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Your Smile, Our Priority</h1>
+                <p>Comprehensive dental care with a gentle touch and modern technology</p>
+                <a href="{% url 'appointments' %}" class="btn">Book Appointment</a>
+                <a href="{% url 'contact' %}" class="btn">contact us</a>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">Our Dental Services</h2>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🦷</div>
+                    <h3>General Dentistry</h3>
+                    <p>Comprehensive oral health care including cleanings, fillings, extractions, and preventive treatments to maintain your dental health.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">✨</div>
+                    <h3>Cosmetic Dentistry</h3>
+                    <p>Transform your smile with teeth whitening, veneers, bonding, and other aesthetic treatments for a confident, beautiful smile.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🔧</div>
+                    <h3>Orthodontics</h3>
+                    <p>Straighten teeth and correct bite issues with traditional braces, clear aligners, and other orthodontic solutions.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🏥</div>
+                    <h3>Oral Surgery</h3>
+                    <p>Advanced surgical procedures including wisdom tooth removal, dental implants, and complex extractions with modern techniques.</p>
+                </div>
+            </div>
+            
+            <div class="additional-services">
+                <h3 class="section-title">Additional Services</h3>
+                <div class="additional-grid">
+                    <div class="additional-card">
+                        <h4>Pediatric Dentistry</h4>
+                        <p>Specialized care for children's dental health and development</p>
+                    </div>
+                    <div class="additional-card">
+                        <h4>Emergency Care</h4>
+                        <p>24/7 emergency dental services for urgent dental needs</p>
+                    </div>
+                    <div class="additional-card">
+                        <h4>Dental Hygiene</h4>
+                        <p>Professional cleaning and oral health education programs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team" id="team">
+        <div class="container">
+            <h2 class="section-title">Meet Our Dental Team</h2>
+            
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-photo">
+                        <img src="{% static 'images/ian.jpg' %}" alt="My Banner" class="my-fit-image">
+                    </div>
+                    <div class="team-info">
+                        <h4>Dr. Ian kiptoo</h4>
+                        <p>Chief Dental Officer</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="team-photo">
+                        <img src="{% static 'images/me.jpg' %}" alt="My Banner" class="my-fit-image">
+                    </div>
+                    <div class="team-info">
+                        <h4>Dr. Mike Delvis</h4>
+                        <p>Orthodontist</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="team-photo">
+                        <img src="{% static 'images/manu.jpg' %}" alt="My Banner" class="my-fit-image">
+                    </div>
+                    <div class="team-info">
+                        <h4>Dr. Emmanuel Kibet</h4>
+                        <p>Oral Surgeon</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="team-photo">
+                        <img src="{% static 'images/jane.jpg' %}" alt="My Banner" class="my-fit-image">
+                    </div>
+                    <div class="team-info">
+                        <h4>Dr. Jane Wilson</h4>
+                        <p>Cosmetic Dentist</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>10,000+</h3>
+                    <p>Happy Patients</p>
+                </div>
+                <div class="stat-item">
+                    <h3>20</h3>
+                    <p>Years of Service</p>
+                </div>
+                <div class="stat-item">
+                    <h3>12</h3>
+                    <p>Dental Specialists</p>
+                </div>
+                <div class="stat-item">
+                    <h3>50+</h3>
+                    <p>Dental Procedures</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Patients Say</h2>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <blockquote>"The best dental experience I've ever had. The staff is professional and caring."</blockquote>
+                    <div class="testimonial-author">- Maria Santos</div>
+                </div>
+                
+                <div class="testimonial">
+                    <blockquote>"Dr. Ian transformed my smile completely. I couldn't be happier with the results!"</blockquote>
+                    <div class="testimonial-author">- John Martinez</div>
+                </div>
+                
+                <div class="testimonial">
+                    <blockquote>"My children love coming here. The pediatric team makes dental visits fun and comfortable."</blockquote>
+                    <div class="testimonial-author">- Lisa Thompson</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners -->
+    <section class="partners">
+        <div class="container">
+            <h2 class="section-title">Our Partners & Affiliations</h2>
+            
+            <div class="partners-grid">
+                <div class="partner-logo">
+                    <strong>Kenyan Dental Association</strong>
+                </div>
+                <div class="partner-logo">
+                    <strong>State Dental Board</strong>
+                </div>
+                <div class="partner-logo">
+                    <strong>Dental University of Kenya</strong>
+                </div>
+                <div class="partner-logo">
+                    <strong>Oral Health Foundation</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Location</h4>
+                    <p>Sarit Plaza</p>
+                    <p>Room 12</p>
+                    <p>Nairobi, Westlands</p>
+                    <p>Phone: +254 722682844</p>
+                    <p>Email: info@premierdentalcare.com</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#services">Our Services</a></li>
+                        <li><a href="#team">Meet Our Team</a></li>
+                        <li><a href="{% url 'appointments' %}">Book Appointment</a></li>
+                        <li><a href="#emergency">Emergency Care</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Patient Resources</h4>
+                    <ul>
+                        <li><a href="#forms">Patient Forms</a></li>
+                        <li><a href="#education">Oral Health Education</a></li>
+                        <li><a href="#faq">Frequently Asked Questions</a></li>
+                        <li><a href="#testimonials">Patient Reviews</a></li>
+                        <li><a href="https://molars.co.ke/blog/">Dental Health Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Working Hours</h4>
+                    <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
+                    <p>Saturday: 9:00 AM - 4:00 PM</p>
+                    <p>Sunday: Emergency Only</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Premier Dental Care Center. All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+    
+    {%endblock%}
+</body>
+</html>

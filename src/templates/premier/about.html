@@ -1,0 +1,64 @@
+ <script>
+        // Form submission handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const urgency = formData.get('urgency');
+            
+            // Check if it's an emergency
+            if (urgency === 'emergency') {
+                if (confirm('This appears to be a dental emergency. Would you like to call our emergency line now instead of sending a message?')) {
+                    window.location.href = 'tel:555-911-TOOTH';
+                    return;
+                }
+            }
+            
+            // Simulate form submission
+            const submitButton = this.querySelector('.btn');
+            const originalText = submitButton.textContent;
+            
+            submitButton.textContent = 'Sending...';
+            submitButton.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert('Thank you for contacting Premier Dental Care! We have received your message and will respond within 24 hours. For urgent matters, please call our main number.');
+                this.reset();
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            }, 2000);
+        });
+        
+        // Add some interactivity for phone numbers
+        document.querySelectorAll('a[href^="tel:"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // On desktop, show the number instead of trying to call
+                if (window.innerWidth > 768) {
+                    e.preventDefault();
+                    alert('Our phone number is: ' + this.textContent);
+                }
+            });
+        });
+        
+        // Form validation enhancements
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', function() {
+            // Simple phone number formatting
+            let value = this.value.replace(/\D/g, '');
+            if (value.length >= 6) {
+                value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+            } else if (value.length >= 3) {
+                value = value.replace(/(\d{3})(\d{3})/, '($1) $2');
+            }
+            this.value = value;
+        });
+        
+        // Auto-resize textarea
+        const messageTextarea = document.getElementById('message');
+        messageTextarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    </script>
