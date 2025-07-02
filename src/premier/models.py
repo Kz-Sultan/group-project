@@ -34,6 +34,7 @@ class Contact(models.Model):
     read = models.BooleanField(default=False)
     reply = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    sent_by_admin = models.BooleanField(default=False)  # New field to indicate if the message is sent by an admin
 
     def __str__(self):
         return f"Contact from {self.name} - {self.subject}"

@@ -38,7 +38,8 @@ def contact(request):
                 email=email,
                 phone_number=phone_number,
                 subject=subject,
-                message=message
+                message=message,
+                sent_by_admin=False  # Add this line to indicate it's sent by a user
             )
             contact.save()
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
