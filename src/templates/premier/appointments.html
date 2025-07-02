@@ -1,4 +1,13 @@
 {% extends 'premier/base.html' %}
+{% block user_status %}
+<div style="position: fixed; top: 20px; right: 30px; z-index: 2000;">
+    {% if user.is_authenticated %}
+        <span style="color: #27a09a; font-weight: bold;">
+            Hi {{ user.username }}
+        </span>
+    {% endif %}
+</div>
+{% endblock %}
 {%block title %}Premier Dental Care - Appointment Booking{% endblock %}
 
 
@@ -163,51 +172,6 @@
             background: #545b62;
         }
         
-        .appointment-card {
-            background: #f8f9fa;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .appointment-info h4 {
-            color: #16192b;
-            margin-bottom: 5px;
-        }
-        
-        .appointment-info p {
-            color: #666;
-            margin-bottom: 3px;
-        }
-        
-        .appointment-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        
-        .status-confirmed {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
         .status-cancelled {
             background: #f8d7da;
             color: #721c24;
@@ -217,18 +181,6 @@
             padding: 15px;
             border-radius: 5px;
             margin-bottom: 20px;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-        
-        .alert-danger {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
         }
         
         .alert-info {
@@ -271,13 +223,6 @@
             text-decoration: line-through;
         }
         
-        .search-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
         @media (max-width: 768px) {
             .tab-navigation {
                 flex-direction: column;
@@ -310,21 +255,22 @@
 {% block content%}
     <div class="container">
         <div class="header">
-            <h1>🦷 Appointment Management</h1>
-            <p>Book, modify, or cancel your dental appointments</p>
+            <h1> Appointment Management</h1>
+            <p>Book and cancel your dental appointments</p>
         </div>
         
         <div class="main-content">
             <div class="tab-navigation">
                 <button class="tab-btn active" onclick="showTab('book')">Book Appointment</button>
-                <button class="tab-btn" onclick="showTab('manage')">Manage Appointments</button>
                 <button class="tab-btn" onclick="showTab('cancel')">Cancel Appointment</button>
             </div>
             
             
             <div id="book" class="tab-content active">
                 <h2>Book New Appointment</h2>
-                <form id="bookingForm">
+                
+                <form id="bookingForm" method="post" action="{% url 'appointments' %}">
+                    {% csrf_token %}
                     <div class="form-row">
                         <div class="form-group">
                             <label for="firstName">First Name </label>
@@ -347,32 +293,32 @@
                             <input type="tel" id="phone" name="phone" required>
                         </div>
                     </div>
-                       
-                    </div>
+
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="appointmentType">Appointment Type </label>
                             <select id="appointmentType" name="appointmentType" required>
                                 <option value="">Select Service</option>
-                                <option value="cleaning">Regular Cleaning</option>
-                                <option value="checkup">General Checkup</option>
-                                <option value="filling">Dental Filling</option>
-                                <option value="extraction">Tooth Extraction</option>
-                                <option value="whitening">Teeth Whitening</option>
-                                <option value="orthodontics">Orthodontic Consultation</option>
-                                <option value="emergency">Emergency Visit</option>
-                                <option value="consultation">Initial Consultation</option>
+                                <option value="Cleaning">Regular Cleaning</option>
+                                <option value="Checkup">General Checkup</option>
+                                <option value="Filling">Dental Filling</option>
+                                <option value="Extraction">Tooth Extraction</option>
+                                <option value="Whitening">Teeth Whitening</option>
+                                <option value="Orthodontics">Orthodontic Consultation</option>
+                                <option value="Emergency">Emergency Visit</option>
+                                <option value="Consultation">Initial Consultation</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="doctor">Preferred Dentist</label>
                             <select id="doctor" name="doctor">
-                                <option value="">Any Available</option>
-                                <option value="dr-ian">Dr. Ian Kiptoo</option>
-                                <option value="dr-mike">Dr. Mike Delvis</option>
-                                <option value="dr-kibet">Dr. Emmanuel Kibet</option>
-                                <option value="dr-janen">Dr. Jane Wilson</option>
+                                <option value="Any">Any Available</option>
+                                <option value="Dr Ian">Dr. Ian Kiptoo</option>
+                                <option value="Dr Mike">Dr. Mike Delvis</option>
+                                <option value="Dr Kibet">Dr. Emmanuel Kibet</option>
+                                <option value="Dr Jane">Dr. Jane Wilson</option>
                             </select>
                         </div>
                     </div>
@@ -385,70 +331,37 @@
                         <div class="form-group">
                             <label for="timePreference">Time Preference</label>
                             <select id="timePreference" name="timePreference">
-                                <option value="">Any Time</option>
-                                <option value="morning">Morning (8AM - 12PM)</option>
-                                <option value="afternoon">Afternoon (12PM - 5PM)</option>
-                                <option value="evening">Evening (5PM - 7PM)</option>
+                                <option value="08:00">Morning (8AM - 12PM)</option>
+                                <option value="12:00">afternoon (12PM - 3PM)</option>
+                                <option value="15:00">Evening (4PM - 6PM)</option>
                             </select>
                         </div>
                     </div>
+
+
                     
                     <button type="submit" class="btn">Book Appointment</button>
+                    
                 </form>
-            </div>
-            
-            
-            <div id="manage" class="tab-content">
-                <h2>Your Appointments</h2>
-                
-                <div class="search-section">
-                    <h3>Find Your Appointments</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="searchEmail">Email Address</label>
-                            <input type="email" id="searchEmail" placeholder="Enter your email">
-                        </div>
-                        <div class="form-group">
-                            <label for="searchPhone">Phone Number</label>
-                            <input type="tel" id="searchPhone" placeholder="Enter your phone number">
-                        </div>
-                    </div>
-                    <button type="button" class="btn" onclick="searchAppointments()">Search Appointments</button>
-                </div>
-                
-                <div id="appointmentsList">
-                    
-                    <div class="appointment-card">
-                        <div class="appointment-info">
-                            <h4>Regular Cleaning</h4>
-                            <p><strong>Date:</strong> March 15, 2025 at 10:00 AM</p>
-                            <p><strong>Doctor:</strong> Dr. Jane Wilsonn</p>
-                            <p><strong>Patient:</strong> John Doe</p>
-                            <span class="status-badge status-confirmed">Confirmed</span>
-                        </div>
-                        <div class="appointment-actions">
-                            <button class="btn btn-secondary" onclick="rescheduleAppointment('apt001')">Reschedule</button>
-                            <button class="btn btn-danger" onclick="cancelAppointment('apt001')">Cancel</button>
-                        </div>
-                    </div>
-                    
-                    <div class="appointment-card">
-                        <div class="appointment-info">
-                            <h4>Dental Checkup</h4>
-                            <p><strong>Date:</strong> April 2, 2025 at 2:30 PM</p>
-                            <p><strong>Doctor:</strong> Dr. Ian kiptoo</p>
-                            <p><strong>Patient:</strong> Jane Smith</p>
-                            <span class="status-badge status-pending">Pending</span>
-                        </div>
-                        <div class="appointment-actions">
-                            <button class="btn btn-secondary" onclick="rescheduleAppointment('apt002')">Reschedule</button>
-                            <button class="btn btn-danger" onclick="cancelAppointment('apt002')">Cancel</button>
-                        </div>
-                    </div>
+                <div id="appointmentPopup" style="
+                    display:none;
+                    position:fixed;
+                    top:50%;
+                    left:50%;
+                    transform:translate(-50%,-50%);
+                    background:#27a09a;
+                    color:white;
+                    padding:18px 30px;
+                    border-radius:8px;
+                    z-index:9999;
+                    font-size:18px;
+                    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+                    text-align:center;
+                ">
+                    Appointment sent pending approval.
                 </div>
             </div>
-            
-            
+
             <div id="cancel" class="tab-content">
                 <h2>Cancel Appointment</h2>
                 
@@ -456,7 +369,8 @@
                     <strong>Cancellation Policy:</strong> Please cancel at least 24 hours in advance to avoid cancellation fees. Emergency cancellations are accepted without penalty.
                 </div>
                 
-                <form id="cancelForm">
+                <form id="cancelForm" method="post" action="{% url 'appointments_list' %}">
+                    {% csrf_token %}
                     <div class="form-group">
                         <label for="cancelEmail">Email Address </label>
                         <input type="email" id="cancelEmail" name="cancelEmail" required placeholder="Enter your email address">
@@ -468,16 +382,10 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="appointmentId">Appointment Reference (if available)</label>
-                        <input type="text" id="appointmentId" name="appointmentId" placeholder="e.g., APT001234">
-                    </div>
-                    
-                    <div class="form-group">
                         <label for="cancelReason">Reason for Cancellation</label>
                         <select id="cancelReason" name="cancelReason">
                             <option value="">Select Reason</option>
                             <option value="schedule-conflict">Schedule Conflict</option>
-                            <option value="illness">Illness</option>
                             <option value="emergency">Emergency</option>
                             <option value="travel">Travel</option>
                             <option value="financial">Financial Reasons</option>
@@ -488,6 +396,10 @@
                     <button type="submit" class="btn btn-danger">Cancel Appointment</button>
                 </form>
             </div>
+
+            
+
+
         </div>
     </div>
 
@@ -520,40 +432,7 @@
             });
         });
         
-        
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const selectedTime = document.querySelector('.time-slot.selected');
-            
-            alert('Appointment booked successfully! You will receive a confirmation email shortly.');
-            this.reset();
-            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-        });
-        
-        document.getElementById('cancelForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (confirm('Are you sure you want to cancel this appointment?')) {
-                alert('Appointment cancelled successfully. You will receive a confirmation email.');
-                this.reset();
-            }
-        });
-        
-        function searchAppointments() {
-            const email = document.getElementById('searchEmail').value;
-            const phone = document.getElementById('searchPhone').value;
-            
-            if (!email && !phone) {
-                alert('Please enter either email or phone number to search');
-                return;
-            }
-            
-            alert('Searching for appointments... (This would fetch real data from the server)');
-        }
-        
-        function rescheduleAppointment(appointmentId) {
-            alert(`Rescheduling appointment ${appointmentId}. You will be redirected to the booking form.`);
-            showTab('book');
-        }
+    
         
         function cancelAppointment(appointmentId) {
             if (confirm(`Are you sure you want to cancel appointment ${appointmentId}?`)) {
@@ -572,6 +451,35 @@
             });
         });
     </script>
+    <script>
+document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': data.get('csrfmiddlewaretoken'),
+        },
+        body: data
+    })
+    .then(response => {
+        if (response.ok) {
+            // Show popup
+            document.getElementById('appointmentPopup').style.display = 'block';
+            // Optionally clear the form
+            form.reset();
+            // Hide popup after 3 seconds
+            setTimeout(() => {
+                document.getElementById('appointmentPopup').style.display = 'none';
+            }, 3000);
+        } else {
+            alert('There was an error sending your appointment.');
+        }
+    });
+});
+</script>
    
 
     {% endblock %}

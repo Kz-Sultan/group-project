@@ -1,0 +1,268 @@
+{% extends 'premier/base.html' %}
+{% block user_status %}
+<div style="position: fixed; top: 20px; right: 30px; z-index: 2000;">
+    {% if user.is_authenticated %}
+        <span style="color: #27a09a; font-weight: bold;">
+            Hi {{ user.username }}
+        </span>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block title %}Inbox - Patient Messages{% endblock %}
+
+{% block style %}
+<style>
+    body {
+        background: #f8f7f6;
+    }
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .header {
+        background: #27a09a;
+        color: white;
+        text-align: center;
+        padding: 30px 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+    .header h1 {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+    .header p {
+        font-size: 18px;
+        opacity: 0.9;
+    }
+    .messages-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 40px;
+    }
+    .messages-header {
+        background: #f8f9fa;
+        padding: 20px;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .messages-feed {
+        width: 100%;
+    }
+    .message-item {
+        border-bottom: 1px solid #e0e0e0;
+        padding: 20px;
+        cursor: pointer;
+    }
+    .message-item:last-child {
+        border-bottom: none;
+    }
+    .message-item.unread {
+        background: #f0f9f8;
+        border-left: 4px solid #27a09a;
+    }
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
+    }
+    .message-info {
+        flex: 1;
+    }
+    .sender-name {
+        font-weight: bold;
+        color: #16192b;
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+    .message-subject {
+        font-size: 18px;
+        color: #27a09a;
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+    .message-preview {
+        color: #666;
+        font-size: 17px;
+        line-height: 1.4;
+        margin-bottom: 10px;
+    }
+    .message-meta {
+        display: flex;
+        gap: 15px;
+        font-size: 14.5px;
+        color: #999;
+    }
+    .message-actions {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        margin-top: 10px;
+    }
+    .action-btn {
+        padding: 8px 15px;
+        font-size: 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: #27a09a;
+        color: white;
+    }
+    .action-btn.delete {
+        background: #dc3545;
+    }
+    .action-btn.delete:hover {
+        background: #c82333;
+    }
+    .action-btn.toggle {
+        background: #6c757d;
+    }
+    .action-btn.toggle:hover {
+        background: #545b62;
+    }
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-right: 10px;
+    }
+    .status-unread {
+        background: #cdeeff;
+        color: #856404;
+    }
+    .status-read {
+        background: #d4edda;
+        color: #155724;
+    }
+    .reply-section textarea {
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        margin-top: 10px;
+        font-size: 15px;
+        resize: vertical;
+    }
+    .reply-section button {
+        margin-top: 5px;
+    }
+    @media (max-width: 768px) {
+        .messages-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .message-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>Premier Dental Care-Patient Messages Inbox</h1>
+        <p>Admin Dashboard</p>
+    </div>
+
+    <div class="messages-container">
+        <div class="messages-header">
+            <h3>Patient Messages</h3>
+            <span id="messageCount">{{ contacts|length }} messages</span>
+        </div>
+        <div class="messages-feed">
+            {% if contacts %}
+                {% for contact in contacts %}
+                <div class="message-item {% if not contact.read %}unread{% endif %}" id="message-{{ contact.id }}">
+                    <div class="message-header">
+                        <div class="message-info">
+                            <div class="sender-name">{{ contact.name }}</div>
+                            <div class="message-subject">{{ contact.subject }}</div>
+                            <div class="message-preview">{{ contact.message|truncatechars:100 }}</div>
+                            <div class="message-meta">
+                                <span>Email: {{ contact.email }}</span>
+                                {% if contact.phone_number %}
+                                    <span>Phone: {{ contact.phone_number }}</span>
+                                {% endif %}
+                                {% if contact.created_at %}
+                                    <span>🕐 {{ contact.created_at|date:"M d, Y H:i" }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="message-actions">
+                            {% if contact.read %}
+                                <span class="status-badge status-read">Read</span>
+                                <button class="action-btn toggle" onclick="toggleRead({{ contact.id }}, false)">Mark as Unread</button>
+                            {% else %}
+                                <span class="status-badge status-unread">Unread</span>
+                                <button class="action-btn toggle" onclick="toggleRead({{ contact.id }}, true)">Mark as Read</button>
+                            {% endif %}
+                            <button class="action-btn delete" onclick="deleteMessage({{ contact.id }})">Delete</button>
+                        </div>
+                    </div>
+                    <!-- Reply section -->
+                    <div class="reply-section" style="margin-top:15px;">
+                        <form method="post" action="{% url 'reply_message' contact.id %}">
+                            {% csrf_token %}
+                            <textarea name="reply" rows="2" placeholder="Type your reply here..." style="width:100%;padding:8px;">{{ contact.reply }}</textarea>
+                            <button type="submit" class="action-btn" style="margin-top:5px;">Send Reply</button>
+                        </form>
+                        {% if contact.reply %}
+                            <div style="margin-top:8px;color:#27a09a;"><strong>Reply sent:</strong> {{ contact.reply }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="padding: 20px;">No messages found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleRead(messageId, markRead) {
+    fetch(`/messages/${messageId}/mark_${markRead ? 'read' : 'unread'}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            location.reload();
+        }
+    });
+}
+
+function deleteMessage(messageId) {
+    if (confirm('Are you sure you want to delete this message?')) {
+        fetch(`/messages/${messageId}/delete/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                document.getElementById('message-' + messageId).remove();
+            }
+        });
+    }
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'premier/base.html' %}
+
+{% block title %}Cancel Appointment{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Cancel Your Appointment</h2>
+    <p>Enter your email and appointment date to cancel your booking.</p>
+    <form method="post" action="{% url 'appointment_list' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="appointmentType">Appointment Type</label>
+            <select id="appointmentType" name="appointmentType" required>
+        </div>        
+        <div class="form-group">
+            <label for="appointmentDate">Appointment Date</label>
+            <input type="date" id="appointmentDate" name="appointmentDate" required>
+        </div>
+        <button type="submit" class="btn btn-danger">Cancel Appointment</button>
+    </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+</div>
+{% endblock %}

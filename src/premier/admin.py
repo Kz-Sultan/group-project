@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Appointment, contact
+from .models import Appointment, Contact
 
 # Register your models here.
 class AppointmentAdmin(admin.ModelAdmin):
@@ -10,8 +10,9 @@ class AppointmentAdmin(admin.ModelAdmin):
 class ContactAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'email', 'phone_number')
     search_fields = ('full_name', 'email')
-admin.site.register(contact)
+admin.site.register(Contact)
 
 # Register your models here.
 # admin.site.register(Appointment, AppointmentAdmin)    
-   
+# admin.site.register(Contact, ContactAdmin)
+

@@ -1,0 +1,303 @@
+{% extends 'premier/base.html' %}
+
+{% block title %}Patient Portal{% endblock %}
+
+{% block style %}
+<style>
+    body {
+        background: #f8f7f6;
+        color: #333;
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+    }
+    .portal-hero {
+        max-width: 900px;
+        margin: 40px auto 0 auto;
+        background: #23a09a;
+        color: #fff;
+        border-radius: 12px;
+        padding: 36px 24px 28px 24px;
+        text-align: center;
+    }
+    .portal-hero h1 {
+        font-size: 2.3rem;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    .portal-hero p {
+        font-size: 1.15rem;
+        opacity: 0.95;
+    }
+    .portal-card {
+        max-width: 900px;
+        margin: 32px auto;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 24px rgba(0,0,0,0.08);
+        padding: 0;
+    }
+    .portal-tabs {
+        display: flex;
+        border-bottom: 2px solid #e0e0e0;
+        background: #fff;
+        border-radius: 12px 12px 0 0;
+        overflow: hidden;
+    }
+    .portal-tab {
+        flex: 1;
+        text-align: center;
+        padding: 18px 0 14px 0;
+        font-size: 1.08rem;
+        font-weight: 600;
+        color: #23a09a;
+        background: #fff;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+    }
+    .portal-tab.active {
+        border-bottom: 3px solid #23a09a;
+        background: #f8f7f6;
+        color: #16192b;
+    }
+    .tab-content {
+        padding: 36px 32px 32px 32px;
+        min-height: 320px;
+    }
+    .tab-content table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+        overflow: hidden;
+    }
+    th, td {
+        padding: 16px 10px;
+        text-align: left;
+    }
+    th {
+        background: #f0f9f8;
+        color: #16192b;
+        font-size: 16px;
+        font-weight: bold;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    tr {
+        border-bottom: 1px solid #e0e0e0;
+    }
+    tr:last-child {
+        border-bottom: none;
+    }
+    .status-badge {
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+    .status-confirmed {
+        background: #d4edda;
+        color: #155724;
+    }
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    .status-cancelled {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    .no-data {
+        text-align: center;
+        padding: 50px 20px;
+        color: #666;
+    }
+    .no-data-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+    .book-btn {
+        margin-top: 18px;
+        background: #23a09a;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 12px 32px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .book-btn:hover {
+        background: #18877e;
+    }
+    @media (max-width: 768px) {
+        .portal-hero, .portal-card {
+            max-width: 98vw;
+            padding: 12px 2vw;
+        }
+        .tab-content {
+            padding: 18px 4vw;
+        }
+        th, td {
+            padding: 10px 5px;
+            font-size: 14px;
+        }
+        h2 {
+            font-size: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="portal-hero">
+    <h1>🦷 Patient Portal</h1>
+    <p>View your appointments and messages from Premier Dental Care</p>
+</div>
+
+<div class="portal-card">
+    <div class="portal-tabs">
+        <button class="portal-tab active" id="tab-appointments" onclick="showTab('appointments')">My Appointments</button>
+        <button class="portal-tab" id="tab-messages" onclick="showTab('messages')">Messages & Replies</button>
+        <button class="portal-tab" id="tab-contact" onclick="showTab('contact')">Contact Clinic</button>
+    </div>
+    <div class="tab-content" id="content-appointments">
+        <h2>Your Appointments</h2>
+        {% if appointments %}
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Dentist</th>
+                    <th>Status</th>
+                </tr>
+                {% for appt in appointments %}
+                <tr>
+                    <td>{{ appt.appointmentDate }}</td>
+                    <td>{{ appt.timePreference }}</td>
+                    <td>{{ appt.appointmentType }}</td>
+                    <td>{{ appt.doctor }}</td>
+                    <td>
+                        {% if appt.is_cancelled %}
+                            <span class="status-badge status-cancelled">Cancelled</span>
+                        {% elif appt.is_confirmed %}
+                            <span class="status-badge status-confirmed">Approved</span>
+                        {% else %}
+                            <span class="status-badge status-pending">Pending</span>
+                        {% endif %}
+                        {% if appt.status_message %}
+                            <div style="font-size:13px; color:#333; margin-top:4px;">
+                                {{ appt.status_message }}
+                            </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <div class="no-data">
+                <div class="no-data-icon">📅</div>
+                <h3>No Appointments Found</h3>
+                <p>We couldn't find any appointments associated with the provided information.<br>
+                If you believe this is an error, please contact our office.</p>
+                <a href="{% url 'appointments' %}"><button class="book-btn">Book Your First Appointment</button></a>
+            </div>
+        {% endif %}
+    </div>
+    <div class="tab-content" id="content-messages" style="display:none;">
+    <h2>Messages & Replies</h2>
+    <style>
+        .message-thread {
+            margin-bottom: 28px;
+            padding: 18px 20px;
+            background: #f8f7f6;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .message-meta {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 6px;
+        }
+        .message-user {
+            font-weight: bold;
+            color: #23a09a;
+        }
+        .message-body {
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .clinic-reply {
+            margin-top: 10px;
+            padding: 12px 16px;
+            background: #e6f7f5;
+            border-left: 4px solid #23a09a;
+            border-radius: 7px;
+            color: #18877e;
+            font-size: 15px;
+        }
+        .no-reply {
+            color: #856404;
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+    {% if contacts %}
+        {% for contact in contacts %}
+            <div class="message-thread">
+                <div class="message-meta">
+                    <span class="message-user">You</span> &mdash; {{ contact.created_at|date:"M d, Y H:i" }}
+                    {% if contact.subject %}
+                        &nbsp;|&nbsp; <span style="color:#16192b;">Subject:</span> {{ contact.subject }}
+                    {% endif %}
+                </div>
+                <div class="message-body">
+                    {{ contact.message }}
+                </div>
+                {% if contact.reply %}
+                    <div class="clinic-reply">
+                        <strong>Clinic Reply:</strong> {{ contact.reply }}
+                    </div>
+                {% else %}
+                    <div class="no-reply">No reply yet</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-data">
+            <div class="no-data-icon">💬</div>
+               <h3>No Messages Found</h3>
+                <p>You don't have any messages or replies from our clinic yet.</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="tab-content" id="content-contact" style="display:none;">
+        <h2>Contact Clinic</h2>
+        <p>Need to reach out? <a href="{% url 'contact' %}" style="color:#23a09a;font-weight:600;">Click here to contact us</a>.</p>
+    </div>
+</div>
+
+<script>
+function showTab(tab) {
+    // Hide all tab contents
+    document.getElementById('content-appointments').style.display = 'none';
+    document.getElementById('content-messages').style.display = 'none';
+    document.getElementById('content-contact').style.display = 'none';
+    // Remove active from all tabs
+    document.getElementById('tab-appointments').classList.remove('active');
+    document.getElementById('tab-messages').classList.remove('active');
+    document.getElementById('tab-contact').classList.remove('active');
+    // Show selected tab
+    document.getElementById('content-' + tab).style.display = 'block';
+    document.getElementById('tab-' + tab).classList.add('active');
+}
+</script>
+{% endblock %}
