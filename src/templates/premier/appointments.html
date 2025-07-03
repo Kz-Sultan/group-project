@@ -396,10 +396,23 @@
                     <button type="submit" class="btn btn-danger">Cancel Appointment</button>
                 </form>
             </div>
-
-            
-
-
+            <div id="cancelPopup" style="
+                display:none;
+                position:fixed;
+                top:50%;
+                left:50%;
+                transform:translate(-50%,-50%);
+                background:#dc3545;
+                color:white;
+                padding:18px 30px;
+                border-radius:8px;
+                z-index:9999;
+                font-size:18px;
+                box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+                text-align:center;
+            ">
+                Your appointment has been cancelled.
+            </div>
         </div>
     </div>
 
@@ -480,7 +493,111 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
     });
 });
 </script>
+
+
+<!-- ...existing code... -->
+    <script>
+        
+        document.getElementById('appointmentDate').min = new Date().toISOString().split('T')[0];
+        
+        
+        function showTab(tabName) {
+            
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+       
+        document.querySelectorAll('.time-slot:not(.unavailable)').forEach(slot => {
+            slot.addEventListener('click', function() {
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        function cancelAppointment(appointmentId) {
+            if (confirm(`Are you sure you want to cancel appointment ${appointmentId}?`)) {
+                alert('Appointment cancelled successfully!');
+            }
+        }
+        
+        document.getElementById('appointmentDate').addEventListener('change', function() {
+            const timeSlots = document.querySelectorAll('.time-slot');
+            timeSlots.forEach(slot => {
+                if (Math.random() > 0.7) {
+                    slot.classList.add('unavailable');
+                } else {
+                    slot.classList.remove('unavailable');
+                }
+            });
+        });
+    </script>
+    <script>
+document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': data.get('csrfmiddlewaretoken'),
+        },
+        body: data
+    })
+    .then(response => {
+        if (response.ok) {
+            // Show popup
+            document.getElementById('appointmentPopup').style.display = 'block';
+            // Optionally clear the form
+            form.reset();
+            // Hide popup after 3 seconds
+            setTimeout(() => {
+                document.getElementById('appointmentPopup').style.display = 'none';
+            }, 3000);
+        } else {
+            alert('There was an error sending your appointment.');
+        }
+    });
+});
+
+// --- Add this script for cancel form popup ---
+document.getElementById('cancelForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': data.get('csrfmiddlewaretoken'),
+        },
+        body: data
+    })
+    .then(response => {
+        if (response.ok) {
+            // Show cancel popup
+            document.getElementById('cancelPopup').style.display = 'block';
+            form.reset();
+            setTimeout(() => {
+                document.getElementById('cancelPopup').style.display = 'none';
+            }, 3000);
+        } else {
+            alert('There was an error cancelling your appointment.');
+        }
+    });
+});
+</script>
    
 
     {% endblock %}
+   
+
     
